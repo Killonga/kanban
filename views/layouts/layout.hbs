@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KanbanPro</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <nav class="navbar">
+  <a href="/" class="logo">🗂️ KanbanPro</a>
+  <div class="nav-links">
+    <a href="/">Inicio</a>
+
+    {{#if usuario}}
+      {{!-- si hay sesion activa --}}
+      <a href="/dashboard">Dashboard</a>
+      <span class="nav-usuario">👤 {{usuario.nombre}}</span>
+      <a href="/logout" class="btn btn-logout">Cerrar Sesión</a>
+    {{else}}
+      {{!-- si no hay sesion --}}
+      <a href="/login">Iniciar Sesión</a>
+      <a href="/register">Registrarse</a>
+    {{/if}}
+
+  </div>
+</nav>
+
+  <main class="container">
+    {{{body}}}
+  </main>
+
+  <footer>
+    <p>KanbanPro © 2026</p>
+  </footer>
+
+</body>
+</html>

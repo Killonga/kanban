@@ -1,0 +1,128 @@
+{{! Formulario para nueva tarjeta }}
+<div class="nueva-tarjeta-form">
+  <h3>➕ Agregar Nueva Tarjeta</h3>
+  <form method="POST" action="/nueva-tarjeta">
+
+    <div class="form-grid">
+
+      <div class="form-group span-2">
+        <label for="titulo">Título *</label>
+        <input type="text" id="titulo" name="titulo" placeholder="Nombre de la tarea" required />
+      </div>
+
+      <div class="form-group span-2">
+        <label for="descripcion">Descripción</label>
+        <input type="text" id="descripcion" name="descripcion" placeholder="¿Qué hay que hacer?" />
+      </div>
+
+      <div class="form-group">
+        <label for="prioridad">Prioridad</label>
+        <select id="prioridad" name="prioridad">
+          <option value="Feature">Feature</option>
+          <option value="Task">Task</option>
+          <option value="Bug">Bug</option>
+          <option value="Improvement">Improvement</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="tag">TAG</label>
+        <select id="tag" name="tag">
+          <option value="FEATURE">FEATURE</option>
+          <option value="BUG">BUG</option>
+          <option value="HOTFIX">HOTFIX</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="estado">Estado inicial</label>
+        <select id="estado" name="estado">
+          <option value="Backlog">Backlog</option>
+          <option value="Doing">Doing</option>
+          <option value="Review">Review</option>
+          <option value="Done">Done</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="fecha_inicio">Fecha Inicio</label>
+        <input type="date" id="fecha_inicio" name="fecha_inicio" />
+      </div>
+
+      <div class="form-group">
+        <label for="fecha_fin">Fecha Fin</label>
+        <input type="date" id="fecha_fin" name="fecha_fin" />
+      </div>
+
+      <div class="form-group">
+        <label for="autor">Autor</label>
+        <input type="text" id="autor" name="autor" placeholder="Tu nombre" />
+      </div>
+
+      <div class="form-group">
+        <label for="responsable">Responsable</label>
+        <input type="text" id="responsable" name="responsable" placeholder="Asignado a..." />
+      </div>
+
+    </div>
+
+    <button type="submit" class="btn btn-primary">Agregar Tarjeta</button>
+  </form>
+</div>
+
+{{! Tablero Kanban }}
+{{#each tableros}}
+<h2 class="tablero-titulo">{{nombre}}</h2>
+<div class="tablero">
+  {{#each listas}}
+    <div class="lista">
+      <h3 class="lista-titulo">{{nombre}}</h3>
+      <div class="tarjetas">
+
+        {{#each tarjetas}}
+          <div class="tarjeta">
+
+            <div class="tarjeta-badges">
+              <span class="badge badge-tag badge-{{tag}}">{{tag}}</span>
+              <span class="badge badge-prioridad badge-{{prioridad}}">{{prioridad}}</span>
+            </div>
+
+            <h4>{{titulo}}</h4>
+            <p class="tarjeta-desc">{{descripcion}}</p>
+
+            <div class="tarjeta-meta">
+              <span title="Autor">✍️ {{autor}}</span>
+              {{#if responsable}}
+                <span title="Responsable">👤 {{responsable}}</span>
+              {{/if}}
+            </div>
+
+            <div class="tarjeta-fechas">
+              <span title="Creado">📅 {{createdAt}}</span>
+              {{#if fecha_inicio}}
+                <span title="Inicio">🚀 {{fecha_inicio}}</span>
+              {{/if}}
+              {{#if fecha_fin}}
+                <span title="Fin">🏁 {{fecha_fin}}</span>
+              {{/if}}
+            </div>
+
+            <div class="tarjeta-acciones">
+              <a href="/editar-tarjeta/{{this.id}}" class="btn-editar">✏️ Editar</a>
+              <form method="POST" action="/eliminar-tarjeta/{{this.id}}">
+                <button type="submit" class="btn-eliminar">🗑️ Eliminar</button>
+              </form>
+            </div>
+
+          </div>
+        {{/each}}
+
+        {{#unless tarjetas.length}}
+          <p class="lista-vacia">No hay tarjetas aún</p>
+        {{/unless}}
+
+      </div>
+    </div>
+  {{/each}}
+</div>
+{{/each}}

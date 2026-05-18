@@ -1,0 +1,1012 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cristian Escamilla — Desarrollador Web</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --bg: #f8f7f4;
+        --bg-card: #ffffff;
+        --text: #1c1c1c;
+        --text-muted: #6b6b6b;
+        --accent: #1b4fd8;
+        --accent-light: #eef2ff;
+        --border: #e5e5e0;
+        --tag-bg: #f0f0eb;
+        --shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.05);
+        --shadow-hover:
+          0 2px 8px rgba(0, 0, 0, 0.08), 0 12px 32px rgba(0, 0, 0, 0.1);
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        font-size: 16px;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* ── NAV ── */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.25rem 5vw;
+        background: rgba(248, 247, 244, 0.88);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border);
+      }
+
+      .nav-logo {
+        font-family: "DM Serif Display", serif;
+        font-size: 1.15rem;
+        color: var(--text);
+        text-decoration: none;
+        letter-spacing: -0.01em;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+        list-style: none;
+      }
+
+      .nav-links a {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--text-muted);
+        text-decoration: none;
+        transition: color 0.2s;
+        letter-spacing: 0.01em;
+      }
+
+      .nav-links a:hover {
+        color: var(--text);
+      }
+
+      /* ── HERO ── */
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 8rem 5vw 5rem;
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+
+      .hero-label {
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 1.5rem;
+        opacity: 0;
+        animation: fadeUp 0.6s ease forwards 0.2s;
+      }
+
+      .hero h1 {
+        font-family: "DM Serif Display", serif;
+        font-size: clamp(3rem, 7vw, 5.5rem);
+        line-height: 1.05;
+        letter-spacing: -0.03em;
+        margin-bottom: 1.5rem;
+        opacity: 0;
+        animation: fadeUp 0.6s ease forwards 0.35s;
+      }
+
+      .hero h1 em {
+        font-style: italic;
+        color: var(--accent);
+      }
+
+      .hero-desc {
+        font-size: 1.125rem;
+        color: var(--text-muted);
+        max-width: 520px;
+        line-height: 1.75;
+        margin-bottom: 2.5rem;
+        font-weight: 300;
+        opacity: 0;
+        animation: fadeUp 0.6s ease forwards 0.5s;
+      }
+
+      .hero-actions {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        opacity: 0;
+        animation: fadeUp 0.6s ease forwards 0.65s;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        border: none;
+        font-family: "DM Sans", sans-serif;
+      }
+
+      .btn-primary {
+        background: var(--text);
+        color: #fff;
+      }
+
+      .btn-primary:hover {
+        background: var(--accent);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(27, 79, 216, 0.25);
+      }
+
+      .btn-secondary {
+        background: transparent;
+        color: var(--text);
+        border: 1.5px solid var(--border);
+      }
+
+      .btn-secondary:hover {
+        border-color: var(--text);
+        transform: translateY(-2px);
+      }
+
+      .hero-scroll {
+        margin-top: 5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        color: var(--text-muted);
+        font-size: 0.8rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        opacity: 0;
+        animation: fadeUp 0.6s ease forwards 0.8s;
+      }
+
+      .scroll-line {
+        width: 40px;
+        height: 1px;
+        background: var(--text-muted);
+      }
+
+      /* ── SECTION BASE ── */
+      section {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 6rem 5vw;
+      }
+
+      .section-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 0.75rem;
+      }
+
+      .section-title {
+        font-family: "DM Serif Display", serif;
+        font-size: clamp(2rem, 4vw, 3rem);
+        letter-spacing: -0.025em;
+        line-height: 1.1;
+        margin-bottom: 1rem;
+      }
+
+      .section-divider {
+        width: 100%;
+        height: 1px;
+        background: var(--border);
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+
+      /* ── ABOUT / SKILLS ── */
+      .about-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 5rem;
+        margin-top: 3rem;
+        align-items: start;
+      }
+
+      .about-text {
+        font-size: 1.05rem;
+        color: var(--text-muted);
+        line-height: 1.8;
+        font-weight: 300;
+      }
+
+      .about-text strong {
+        color: var(--text);
+        font-weight: 600;
+      }
+
+      .skills-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .skill-group h4 {
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 0.75rem;
+      }
+
+      .skill-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .skill-tag {
+        background: var(--tag-bg);
+        color: var(--text);
+        padding: 0.35rem 0.85rem;
+        border-radius: 100px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        border: 1px solid var(--border);
+        transition: all 0.2s;
+      }
+
+      .skill-tag:hover {
+        background: var(--accent-light);
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      /* ── PROJECTS ── */
+      .project-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        transition: all 0.35s ease;
+        margin-top: 3rem;
+      }
+
+      .project-card:hover {
+        box-shadow: var(--shadow-hover);
+        transform: translateY(-4px);
+      }
+
+      .project-image {
+        width: 100%;
+        height: 320px;
+        background: linear-gradient(
+          135deg,
+          #1b4fd8 0%,
+          #3b82f6 50%,
+          #60a5fa 100%
+        );
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* Decorative board mockup inside image area */
+      .board-mockup {
+        display: flex;
+        gap: 12px;
+        padding: 20px;
+        opacity: 0.9;
+      }
+
+      .board-col {
+        background: rgba(255, 255, 255, 0.18);
+        border-radius: 10px;
+        padding: 12px;
+        width: 130px;
+        backdrop-filter: blur(4px);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+      }
+
+      .board-col-header {
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.65rem;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.9);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+      }
+
+      .board-card {
+        background: rgba(255, 255, 255, 0.25);
+        border-radius: 6px;
+        padding: 8px 10px;
+        margin-bottom: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+
+      .board-card-line {
+        height: 6px;
+        border-radius: 3px;
+        background: rgba(255, 255, 255, 0.7);
+        margin-bottom: 5px;
+      }
+
+      .board-card-line.short {
+        width: 60%;
+      }
+      .board-card-line.medium {
+        width: 80%;
+      }
+
+      .board-card-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.9);
+      }
+
+      .project-image-label {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 0.35rem 0.8rem;
+        border-radius: 100px;
+        backdrop-filter: blur(4px);
+      }
+
+      /* If user adds a real screenshot, uncomment this */
+      /* .project-image img { width: 100%; height: 100%; object-fit: cover; } */
+
+      .project-body {
+        padding: 2.5rem;
+      }
+
+      .project-meta {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.25rem;
+      }
+
+      .project-badge {
+        background: var(--accent-light);
+        color: var(--accent);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 0.3rem 0.8rem;
+        border-radius: 100px;
+        border: 1px solid rgba(27, 79, 216, 0.15);
+      }
+
+      .project-year {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+      }
+
+      .project-title {
+        font-family: "DM Serif Display", serif;
+        font-size: 2rem;
+        letter-spacing: -0.025em;
+        margin-bottom: 1rem;
+        line-height: 1.15;
+      }
+
+      .project-desc {
+        font-size: 0.975rem;
+        color: var(--text-muted);
+        line-height: 1.75;
+        margin-bottom: 1.75rem;
+        font-weight: 300;
+        max-width: 680px;
+      }
+
+      /* Sprint timeline */
+      .sprints {
+        margin-bottom: 2rem;
+      }
+
+      .sprints-title {
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 1rem;
+      }
+
+      .sprint-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+      }
+
+      .sprint-item {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-start;
+        position: relative;
+      }
+
+      .sprint-item:not(:last-child)::before {
+        content: "";
+        position: absolute;
+        left: 10px;
+        top: 22px;
+        width: 1px;
+        height: calc(100% + 4px);
+        background: var(--border);
+      }
+
+      .sprint-dot {
+        width: 20px;
+        height: 20px;
+        min-width: 20px;
+        border-radius: 50%;
+        background: var(--accent-light);
+        border: 2px solid var(--accent);
+        margin-top: 2px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .sprint-content {
+        padding-bottom: 1.25rem;
+      }
+
+      .sprint-name {
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 0.2rem;
+      }
+
+      .sprint-desc-text {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        line-height: 1.6;
+      }
+
+      /* Tech stack */
+      .tech-section {
+        margin-bottom: 2rem;
+      }
+
+      .tech-section-title {
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 0.75rem;
+      }
+
+      .tech-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .tech-tag {
+        background: var(--tag-bg);
+        color: var(--text);
+        padding: 0.3rem 0.85rem;
+        border-radius: 6px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        border: 1px solid var(--border);
+        font-family: "DM Sans", monospace;
+      }
+
+      /* Credentials */
+      .credentials-box {
+        background: var(--tag-bg);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 1rem 1.25rem;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .credentials-box .cred-label {
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        flex: 0 0 auto;
+      }
+
+      .credentials-box .cred-data {
+        font-size: 0.82rem;
+        color: var(--text);
+        font-weight: 500;
+      }
+
+      .cred-sep {
+        color: var(--border);
+      }
+
+      /* Project actions */
+      .project-actions {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      /* ── CONTACT ── */
+      .contact-inner {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: center;
+        margin-top: 3rem;
+      }
+
+      .contact-text {
+        font-size: 1rem;
+        color: var(--text-muted);
+        line-height: 1.8;
+        font-weight: 300;
+      }
+
+      .contact-links {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .contact-link {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        text-decoration: none;
+        color: var(--text);
+        padding: 1rem 1.25rem;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: all 0.2s;
+      }
+
+      .contact-link:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+        transform: translateX(4px);
+        box-shadow: var(--shadow);
+      }
+
+      .contact-link svg {
+        flex: 0 0 auto;
+        opacity: 0.5;
+        transition: opacity 0.2s;
+      }
+
+      .contact-link:hover svg {
+        opacity: 1;
+      }
+
+      /* ── FOOTER ── */
+      footer {
+        border-top: 1px solid var(--border);
+        padding: 2rem 5vw;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1100px;
+        margin: 0 auto;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+      }
+
+      /* ── ANIMATIONS ── */
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(24px);
+        transition:
+          opacity 0.65s ease,
+          transform 0.65s ease;
+      }
+
+      .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width: 768px) {
+        .about-grid,
+        .contact-inner {
+          grid-template-columns: 1fr;
+          gap: 2.5rem;
+        }
+        .board-col {
+          width: 100px;
+        }
+        .board-col:last-child {
+          display: none;
+        }
+        footer {
+          flex-direction: column;
+          gap: 0.5rem;
+          text-align: center;
+        }
+        .project-body {
+          padding: 1.5rem;
+        }
+        .credentials-box {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.5rem;
+        }
+        .nav-links {
+          gap: 1.25rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .board-col:nth-child(3) {
+          display: none;
+        }
+        .hero h1 {
+          font-size: 2.6rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- NAV -->
+    <nav>
+      <a href="#" class="nav-logo">CE.</a>
+      <ul class="nav-links">
+        <li><a href="#sobre-mi">Sobre mí</a></li>
+        <li><a href="#proyectos">Proyectos</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+      </ul>
+    </nav>
+
+    <!-- HERO -->
+    <div class="hero">
+      <p class="hero-label">Desarrollador Web Fullstack</p>
+      <h1>Cristian<br /><em>Escamilla.</em></h1>
+      <p class="hero-desc">
+        Construyo aplicaciones web completas — desde la interfaz hasta la base
+        de datos. Me enfoco en código limpio, arquitectura sólida y experiencias
+        de usuario que realmente funcionan.
+      </p>
+      <div class="hero-actions">
+        <a href="#proyectos" class="btn btn-primary">Ver proyectos →</a>
+        <a href="#contacto" class="btn btn-secondary">Contactarme</a>
+      </div>
+      <div class="hero-scroll">
+        <div class="scroll-line"></div>
+        Scroll para explorar
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- ABOUT -->
+    <section id="sobre-mi">
+      <p class="section-label reveal">Sobre mí</p>
+      <h2 class="section-title reveal">Desarrollo, aprendo,<br />construyo.</h2>
+      <div class="about-grid">
+        <div class="about-text reveal">
+          <p>
+            Soy un desarrollador web con foco en el
+            <strong>stack Fullstack</strong>, apasionado por entender cómo
+            funciona cada capa de una aplicación: desde el diseño de la interfaz
+            hasta la gestión de bases de datos y la seguridad del backend.
+          </p>
+          <br />
+          <p>
+            Me gusta construir cosas que resuelvan problemas reales. Mi approach
+            es
+            <strong>aprender haciendo</strong> — cada proyecto que termino es
+            una versión más sólida del desarrollador que quiero ser.
+          </p>
+        </div>
+        <div class="skills-grid reveal">
+          <div class="skill-group">
+            <h4>Backend</h4>
+            <div class="skill-tags">
+              <span class="skill-tag">Node.js</span>
+              <span class="skill-tag">Express</span>
+              <span class="skill-tag">REST API</span>
+              <span class="skill-tag">JWT</span>
+            </div>
+          </div>
+          <div class="skill-group">
+            <h4>Base de datos</h4>
+            <div class="skill-tags">
+              <span class="skill-tag">PostgreSQL</span>
+              <span class="skill-tag">Sequelize ORM</span>
+            </div>
+          </div>
+          <div class="skill-group">
+            <h4>Frontend & Vistas</h4>
+            <div class="skill-tags">
+              <span class="skill-tag">HTML</span>
+              <span class="skill-tag">CSS</span>
+              <span class="skill-tag">JavaScript</span>
+              <span class="skill-tag">Handlebars</span>
+            </div>
+          </div>
+          <div class="skill-group">
+            <h4>Seguridad & Sesiones</h4>
+            <div class="skill-tags">
+              <span class="skill-tag">bcryptjs</span>
+              <span class="skill-tag">express-session</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- PROJECTS -->
+    <section id="proyectos">
+      <p class="section-label reveal">Proyectos</p>
+      <h2 class="section-title reveal">Lo que construí.</h2>
+
+      <div class="project-card reveal">
+        <!-- Imagen / preview visual -->
+        <div class="project-image" style="height: 320px; padding: 0">
+          <img
+            src="./images/kanban-preview.png"
+            alt="KanbanPro screenshot"
+            style="
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              object-position: top;
+            "
+          />
+          <span class="project-image-label">Fullstack App</span>
+        </div>
+
+        <!-- Cuerpo del proyecto -->
+        <div class="project-body">
+          <div class="project-meta">
+            <span class="project-badge">Proyecto Destacado</span>
+            <span class="project-year">2026</span>
+          </div>
+
+          <h3 class="project-title">KanbanPro</h3>
+
+          <p class="project-desc">
+            Aplicación fullstack de gestión de tareas estilo Kanban con
+            autenticación segura de usuarios y persistencia real en base de
+            datos. Permite organizar el trabajo en tableros con columnas
+            (Backlog, Doing, Review, Done) y tarjetas que se pueden crear,
+            editar, priorizar y asignar. Construida de cero, sprint a sprint,
+            hasta un MVP completamente funcional.
+          </p>
+
+          <!-- Sprint timeline -->
+          <div class="sprints">
+            <p class="sprints-title">Desarrollo por sprints</p>
+            <div class="sprint-list">
+              <div class="sprint-item">
+                <div class="sprint-dot"></div>
+                <div class="sprint-content">
+                  <p class="sprint-name">Sprint 1 — Prototipo funcional</p>
+                  <p class="sprint-desc-text">
+                    SSR con Handlebars, navegación base, persistencia en
+                    archivos JSON, sesiones con express-session.
+                  </p>
+                </div>
+              </div>
+              <div class="sprint-item">
+                <div class="sprint-dot"></div>
+                <div class="sprint-content">
+                  <p class="sprint-name">
+                    Sprint 2 — Arquitectura con PostgreSQL
+                  </p>
+                  <p class="sprint-desc-text">
+                    Modelos Sequelize (Usuario, Tablero, Lista, Tarjeta),
+                    relaciones hasMany/belongsTo, seed script y test de CRUD
+                    aislado.
+                  </p>
+                </div>
+              </div>
+              <div class="sprint-item">
+                <div class="sprint-dot"></div>
+                <div class="sprint-content">
+                  <p class="sprint-name">Sprint 3 — API RESTful & Seguridad</p>
+                  <p class="sprint-desc-text">
+                    JWT + bcryptjs, endpoints CRUD protegidos con middleware,
+                    Eager Loading con Sequelize, conexión completa al dashboard.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tech stack -->
+          <div class="tech-section">
+            <p class="tech-section-title">Tecnologías</p>
+            <div class="tech-tags">
+              <span class="tech-tag">Node.js</span>
+              <span class="tech-tag">Express 5</span>
+              <span class="tech-tag">Handlebars</span>
+              <span class="tech-tag">PostgreSQL</span>
+              <span class="tech-tag">Sequelize ORM</span>
+              <span class="tech-tag">JWT</span>
+              <span class="tech-tag">bcryptjs</span>
+              <span class="tech-tag">express-session</span>
+              <span class="tech-tag">REST API</span>
+            </div>
+          </div>
+
+          <!-- Credenciales de prueba -->
+          <div class="credentials-box">
+            <span class="cred-label">Demo</span>
+            <span class="cred-data">test@kanbanpro.com</span>
+            <span class="cred-sep">|</span>
+            <span class="cred-data">123456</span>
+          </div>
+
+          <!-- Botones -->
+          <div class="project-actions">
+            <a
+              href="https://kanbanpro-jxbf.onrender.com"
+              target="_blank"
+              class="btn btn-primary"
+            >
+              Ver Demo en Vivo ↗
+            </a>
+            <a
+              href="https://github.com/CristianEscamilla"
+              target="_blank"
+              class="btn btn-secondary"
+            >
+              Ver Código en GitHub
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- CONTACT -->
+    <section id="contacto">
+      <p class="section-label reveal">Contacto</p>
+      <h2 class="section-title reveal">¿Hablamos?</h2>
+      <div class="contact-inner">
+        <p class="contact-text reveal">
+          Estoy abierto a nuevas oportunidades, proyectos freelance o
+          simplemente conectar con otros desarrolladores. Si te interesa lo que
+          construí, escribime.
+        </p>
+        <div class="contact-links reveal">
+          <a href="mailto:cristianescamilla@outlook.com" class="contact-link">
+            <svg
+              width="18"
+              height="18"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+              />
+              <polyline points="22,6 12,13 2,6" />
+            </svg>
+            cristianescamilla@outlook.com
+          </a>
+          <a
+            href="https://github.com/CEscaper"
+            target="_blank"
+            class="contact-link"
+          >
+            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+              <path
+                d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+              />
+            </svg>
+            github.com/CEscaper
+          </a>
+          <a
+            href="https://www.linkedin.com/in/cristianescamillaperalta/"
+            target="_blank"
+            class="contact-link"
+          >
+            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+              <path
+                d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"
+              />
+            </svg>
+            LinkedIn
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <span>© 2026 Cristian Escamilla</span>
+      <span>Desarrollado con HTML, CSS & JS puro</span>
+    </footer>
+
+    <script>
+      // Scroll reveal
+      const reveals = document.querySelectorAll(".reveal");
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry, i) => {
+            if (entry.isIntersecting) {
+              setTimeout(() => entry.target.classList.add("visible"), i * 80);
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.1 },
+      );
+      reveals.forEach((el) => observer.observe(el));
+    </script>
+  </body>
+</html>
