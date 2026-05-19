@@ -80,12 +80,12 @@ El objetivo de este sprint fue conectar todas las piezas para lograr un MVP func
 
     Crear un archivo .env en la raiz del proyecto con las siguientes variables:
 
-    DB_NAME=kanbanpro_db
-    DB_USER=postgres
-    DB_PASSWORD=postgres
+    DB_NAME=kanban_db_46vo
+    DB_USER=kanban_db_46vo_user
+    DB_PASSWORD=NsAqmRgj7BzqBAUNUysEdvVrkKpFT4JF  
     DB_HOST=localhost
     DB_PORT=5432
-    JWT_SECRET=tu_secreto_aqui
+    JWT_SECRET=NsAqmRgj7BzqBAUNUysEdvVrkKpFT4JF
 
 3. Poblar la base de datos
 
