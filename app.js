@@ -23,12 +23,13 @@ hbs.registerHelper("eq", (a, b) => a === b);
 
 // middlewares
 app.use(express.static(path.join(__dirname, "public"))); // sirve el css, imagenes, etc
+app.use("/images", express.static(path.join(__dirname, "images"))); // sirve las imagenes de la landing
 app.use(express.urlencoded({ extended: false })); // para leer los datos del formulario
 app.use(express.json()); // se habilita la lectura de JSON en el cuerpo del request
 
 // pagina de inicio
 app.get("/", (req, res) => {
-  res.redirect("/galeria");
+  res.sendFile(path.join(__dirname, "index.html"));
 });
 
 // Visualización de la Galería de Arte
