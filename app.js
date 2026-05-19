@@ -2,13 +2,12 @@
 const express = require("express");
 const hbs = require("hbs");
 const path = require("path");
-const session = require("express-session");
 require("dotenv").config(); // se cargan las variables de entorno desde .env
-const bcrypt = require("bcryptjs");
-const { Tablero, Lista, Tarjeta, Usuario } = require("./models");
+const { Tablero: Galeria, Lista: Seccion, Tarjeta: Cuadro } = require("./models");
 
-const authRoutes = require("./routes/auth"); // se importan las rutas de autenticacion
-const apiRoutes = require("./routes/api"); // se importan las rutas protegidas de la API
+const galeriaController = require("./controllers/tableroController");
+const seccionController = require("./controllers/listaController");
+const cuadroController = require("./controllers/tarjetaController");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -31,254 +30,67 @@ app.use(express.static(path.join(__dirname, "public"))); // sirve el css, imagen
 app.use(express.urlencoded({ extended: false })); // para leer los datos del formulario
 app.use(express.json()); // se habilita la lectura de JSON en el cuerpo del request
 
-// rutas de la API
-app.use("/api/auth", authRoutes); // se montan las rutas de autenticacion
-app.use("/api", apiRoutes); // se montan las rutas protegidas bajo el prefijo /api
-
-// configuracion de sesiones
-app.use(
-  session({
-    secret: "kanbanpro-secret", // palabra secreta para firmar la cookie
-    resave: false, // no guardar la sesion si no cambio nada
-    saveUninitialized: false, // no crear sesion hasta que haya algo que guardar
-  }),
-);
-
-// middleware que verifica si hay sesion activa
-// si no hay sesion, manda al login
-function verificarSesion(req, res, next) {
-  if (req.session.usuario) {
-    next(); // hay sesion, puede continuar
-  } else {
-    res.redirect("/login"); // no hay sesion, al login
-  }
-}
-
 // pagina de inicio
 app.get("/", (req, res) => {
-  res.render("home");
+  res.redirect("/galeria");
 });
 
-// pagina de registro
-app.get("/register", (req, res) => {
-  res.render("register");
-});
-
-// pagina de login
-app.get("/login", (req, res) => {
-  res.render("login");
-});
-
-// dashboard - protegido, solo entra si hay sesion activa
-app.get("/dashboard", verificarSesion, async (req, res) => {
+// Visualización de la Galería de Arte
+app.get("/galeria", async (req, res) => {
   try {
-    // se obtienen todos los tableros del usuario con sus listas y tarjetas anidadas
-    const tableros = await Tablero.findAll({
-      where: { usuarioId: req.session.usuario.id },
+    const galerias = await Galeria.findAll({
       include: [
         {
-          model: Lista,
+          model: Seccion,
           as: "listas",
           include: [
             {
-              model: Tarjeta,
+              model: Cuadro,
               as: "tarjetas",
             },
           ],
-          order: [["id", "ASC"]], // se ordenan las listas por id ascendente
         },
       ],
+      order: [[{ model: Seccion, as: 'listas' }, 'id', 'ASC']]
     });
 
-    // se define el orden correcto de las listas
-    const ordenListas = ["Backlog", "Doing", "Review", "Done"];
-
-    // se convierten a objetos planos y se ordenan las listas de cada tablero
-    const tablerosPlanos = tableros.map((t) => {
-      const tablero = t.toJSON();
-      tablero.listas = tablero.listas.sort((a, b) => {
-        return ordenListas.indexOf(a.estado) - ordenListas.indexOf(b.estado);
-      });
-      return tablero;
-    });
-
-    res.render("dashboard", {
-      tableros: tablerosPlanos,
-      usuario: req.session.usuario,
+    res.render("dashboard", { 
+      tableros: galerias.map(g => g.toJSON()),
+      esGaleria: true 
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).send("Error al cargar el dashboard");
+    res.status(500).send("Error al cargar la galería");
   }
-});
-
-// recibe el formulario de login
-app.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-
-  try {
-    // se busca el usuario en la base de datos
-    const usuario = await Usuario.findOne({ where: { email } });
-
-    if (!usuario) {
-      return res.render("login", { error: "El email no esta registrado" });
-    }
-
-    // se compara la contrasena ingresada contra el hash guardado
-    const passwordValida = await bcrypt.compare(password, usuario.password);
-
-    if (!passwordValida) {
-      return res.render("login", { error: "Contrasena incorrecta" });
-    }
-
-    // se guarda el usuario en la sesion
-    req.session.usuario = {
-      id: usuario.id,
-      nombre: usuario.nombre,
-      email: usuario.email,
-    };
-
-    res.redirect("/dashboard");
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Error al iniciar sesion");
-  }
-});
-
-// recibe el formulario de registro
-app.post("/register", async (req, res) => {
-  const { nombre, email, password } = req.body;
-
-  try {
-    // se verifica que el email no este ya registrado
-    const usuarioExistente = await Usuario.findOne({ where: { email } });
-
-    if (usuarioExistente) {
-      return res.render("register", { error: "Ese email ya esta registrado" });
-    }
-
-    // se hashea la contrasena antes de guardarla
-    const passwordHasheada = await bcrypt.hash(password, 10);
-
-    // se crea el usuario en la base de datos
-    const nuevoUsuario = await Usuario.create({
-      nombre,
-      email,
-      password: passwordHasheada,
-    });
-
-    // se crea un tablero por defecto para el nuevo usuario
-    const tableroDefault = await Tablero.create({
-      nombre: "Mi primer tablero",
-      descripcion: "Tablero creado automaticamente",
-      usuarioId: nuevoUsuario.id,
-    });
-
-    // se crean las cuatro listas por defecto dentro del tablero
-    await Lista.bulkCreate([
-      { nombre: "Backlog", estado: "Backlog", tableroId: tableroDefault.id },
-      { nombre: "Doing", estado: "Doing", tableroId: tableroDefault.id },
-      { nombre: "Review", estado: "Review", tableroId: tableroDefault.id },
-      { nombre: "Done", estado: "Done", tableroId: tableroDefault.id },
-    ]);
-
-    // se inicia sesion automaticamente con el nuevo usuario
-    req.session.usuario = {
-      id: nuevoUsuario.id,
-      nombre: nuevoUsuario.nombre,
-      email: nuevoUsuario.email,
-    };
-
-    res.redirect("/dashboard");
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Error al registrar el usuario");
-  }
-});
-
-// cerrar sesion
-app.get("/logout", (req, res) => {
-  req.session.destroy(); // borramos la sesion
-  res.redirect("/login");
 });
 
 // muestra el formulario de edicion pre-llenado
-app.get("/editar-tarjeta/:id", verificarSesion, async (req, res) => {
+app.get("/editar-tarjeta/:id", async (req, res) => {
   const { id } = req.params;
-
   try {
-    // se busca la tarjeta por su id en la base de datos
-    const tarjeta = await Tarjeta.findByPk(id);
-
-    if (!tarjeta) {
-      return res.redirect("/dashboard");
-    }
-
+    const tarjeta = await Cuadro.findByPk(id);
+    if (!tarjeta) return res.redirect("/galeria");
     res.render("editar-tarjeta", { tarjeta });
   } catch (error) {
-    console.error(error);
-    res.status(500).send("Error al cargar la tarjeta");
+    res.status(500).send("Error al cargar el cuadro");
   }
 });
 
-// recibe el formulario de edicion y actualiza la tarjeta
-app.post("/editar-tarjeta", verificarSesion, async (req, res) => {
-  const {
-    id,
-    titulo,
-    descripcion,
-    prioridad,
-    tag,
-    estado,
-    fecha_inicio,
-    fecha_fin,
-    autor,
-    responsable,
-  } = req.body;
-
+// Actualizar cuadro
+app.post("/editar-tarjeta", async (req, res) => {
+  const { id, titulo, descripcion, autor, responsable, estado } = req.body;
   try {
-    // se busca la tarjeta por su id
-    const tarjeta = await Tarjeta.findByPk(id);
-
-    if (!tarjeta) {
-      return res.redirect("/dashboard");
+    const tarjeta = await Cuadro.findByPk(id);
+    if (tarjeta) {
+      await tarjeta.update({ titulo, descripcion, autor, responsable, estado });
     }
-
-    // se busca la lista que corresponde al nuevo estado
-    const listaDestino = await Lista.findOne({
-      where: { estado },
-      include: [
-        {
-          model: Tablero,
-          as: "tablero",
-          where: { usuarioId: req.session.usuario.id },
-        },
-      ],
-    });
-
-    // se actualiza la tarjeta con los nuevos datos y la nueva lista
-    await tarjeta.update({
-      titulo,
-      descripcion,
-      prioridad,
-      tag,
-      estado,
-      fecha_inicio: fecha_inicio || null,
-      fecha_fin: fecha_fin || null,
-      autor,
-      responsable,
-      listaId: listaDestino ? listaDestino.id : tarjeta.listaId,
-    });
-
-    res.redirect("/dashboard");
+    res.redirect("/galeria");
   } catch (error) {
-    console.error(error);
-    res.status(500).send("Error al actualizar la tarjeta");
+    res.status(500).send("Error al actualizar");
   }
 });
 
 // recibe el formulario de nueva tarjeta
-app.post("/nueva-tarjeta", verificarSesion, async (req, res) => {
+app.post("/nueva-tarjeta", async (req, res) => {
   const {
     titulo,
     descripcion,
@@ -292,61 +104,29 @@ app.post("/nueva-tarjeta", verificarSesion, async (req, res) => {
   } = req.body;
 
   try {
-    // se busca la primera lista del usuario que coincida con el estado elegido
-    const lista = await Lista.findOne({
-      where: { estado },
-      include: [
-        {
-          model: Tablero,
-          as: "tablero",
-          where: { usuarioId: req.session.usuario.id },
-        },
-      ],
+    const lista = await Seccion.findOne({ where: { estado } });
+    if (!lista) return res.redirect("/galeria");
+
+    await Cuadro.create({
+      titulo, descripcion, prioridad, tag, estado,
+      autor, responsable, listaId: lista.id
     });
 
-    if (!lista) {
-      return res.redirect("/dashboard");
-    }
-
-    // se crea la tarjeta asociada a la lista encontrada
-    await Tarjeta.create({
-      titulo,
-      descripcion: descripcion || "",
-      prioridad: prioridad || "Task",
-      tag: tag || "FEATURE",
-      estado: estado || "Backlog",
-      fecha_inicio: fecha_inicio || null,
-      fecha_fin: fecha_fin || null,
-      autor: autor || "Anonimo",
-      responsable: responsable || "",
-      listaId: lista.id,
-    });
-
-    res.redirect("/dashboard");
+    res.redirect("/galeria");
   } catch (error) {
-    console.error(error);
-    res.status(500).send("Error al crear la tarjeta");
+    res.status(500).send("Error al añadir cuadro");
   }
 });
 
 // elimina una tarjeta
-app.post("/eliminar-tarjeta/:id", verificarSesion, async (req, res) => {
+app.post("/eliminar-tarjeta/:id", async (req, res) => {
   const { id } = req.params;
-
   try {
-    // se busca la tarjeta por su id
-    const tarjeta = await Tarjeta.findByPk(id);
-
-    if (!tarjeta) {
-      return res.redirect("/dashboard");
-    }
-
-    // se elimina la tarjeta de la base de datos
-    await tarjeta.destroy();
-    res.redirect("/dashboard");
+    const tarjeta = await Cuadro.findByPk(id);
+    if (tarjeta) await tarjeta.destroy();
+    res.redirect("/galeria");
   } catch (error) {
-    console.error(error);
-    res.status(500).send("Error al eliminar la tarjeta");
+    res.status(500).send("Error al eliminar");
   }
 });
 
